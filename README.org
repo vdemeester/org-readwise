@@ -1,0 +1,5 @@
+# =org-readwise=
+
+/Note: this is my first even "emacs package" and currently a very big work-in-progress/.
+
+This package pulls [[https://readwise.io/][readwise]] highlights to a set of =org-mode= files.
