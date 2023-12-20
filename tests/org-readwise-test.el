@@ -1,4 +1,4 @@
-;;; readwise-test --- tests for readwise.el -*- lexical-binding: t -*-
+;;; org-readwise-test.el --- tests for readwise.el -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023 Vincent Demeester
 ;; Author: Vincent Demeester <vincent@sbr.pm>
@@ -17,17 +17,17 @@
 
 (require 'ert)
 (require 'request)
-(require 'readwise)
+(require 'org-readwise)
 
-;; Globally overwrite the `readwise-url' variable.
-(setq readwise-url "https://foo.bar/baz/v2")
+;; Globally overwrite the `org-readwise-url' variable.
+(setq org-readwise-url "https://foo.bar/baz/v2")
 
-(ert-deftest readwise-test--test ()
+(ert-deftest org-readwise-test--test ()
   "Test the test."
   (request-testing-server)
-  ;; (readwise--fetch-highlights readwise-api-token readwise-sync-db-path nil nil 't)
-  ;; (setq readwise-url (request-testing-url "foo"))
-  (should (equal readwise-url "https://foo.bar/baz/v2"))
+  ;; (org-readwise--fetch-highlights org-readwise-api-token org-readwise-sync-db-path nil nil 't)
+  ;; (setq org-readwise-url (request-testing-url "foo"))
+  (should (equal org-readwise-url "https://foo.bar/baz/v2"))
   (should (equal 1 1)))
 
 ;; See https://github.com/tkf/emacs-request/blob/master/tests/request-testing.el#L74-L122 for setting up
@@ -85,5 +85,5 @@
            do (setq url (concat url "/" p))
            finally return url))
 
-(provide 'readwise-test)
-;;; readwise-test.el ends here
+(provide 'org-readwise-test)
+;;; org-readwise-test.el ends here

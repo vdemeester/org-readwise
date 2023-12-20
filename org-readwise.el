@@ -1,11 +1,11 @@
-;;; readwise.el --- a readwise to org package -*- lexical-binding: t -*-
+;;; org-readwise.el --- a readwise to org package -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023 Vincent Demeester
 
 ;; Author: Vincent Demeester <vincent@sbr.pm>
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "27.2") (request "0.3.3") (dash "2.19.1"))
-;; URL: https://github.com/vdemeester/readwise.el
+;; URL: https://github.com/vdemeester/org-readwise
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -32,47 +32,48 @@
 ;;- Mimic readwise plugin, aka add entries under a date when synced, …
 
 ;;; Code:
+
 (require 'request)
 (require 'dash)
 
-(defconst readwise-url "https://readwise.io/api/v2/" "URL for Readwise API.")
+(defconst org-readwise-url "https://readwise.io/api/v2/" "URL for Readwise API.")
 
 (defgroup readwise ()
   "Readwise integration for Emacs."
-  ;; or :group 'org and :prefix readwise- ?
+  ;; or :group 'org and :prefix org-readwise- ?
   :group 'readwise)
 
-(defcustom readwise-sync-db-path (expand-file-name "~/.config/emacs/readwise-last-sync")
+(defcustom org-readwise-sync-db-path (expand-file-name "~/.config/emacs/org-readwise-last-sync")
   "Path to the file where the last sync is stored."
   :type 'string
   :group 'readwise)
 
-(defcustom readwise-api-token nil
+(defcustom org-readwise-api-token nil
   "Readwise API key."
   :type 'string
   :group 'readwise)
 
-(defun readwise--save-last-sync ()
+(defun org-readwise--save-last-sync ()
   "Save the most recent sync time."
   (let ((ts (format-time-string "%Y-%m-%dT%H:%M:%SZ" (current-time) t)))
-    (with-temp-file readwise-sync-db-path
+    (with-temp-file org-readwise-sync-db-path
       (erase-buffer)
       (insert ts))))
 
-(defun readwise--get-last-sync ()
+(defun org-readwise--get-last-sync ()
   "Retrieve the ISO 8601 timestamp of the last sync time."
-  (if (file-exists-p readwise-sync-db-path)
+  (if (file-exists-p org-readwise-sync-db-path)
       (with-temp-buffer
-        (insert-file-contents readwise-sync-db-path)
+        (insert-file-contents org-readwise-sync-db-path)
         (buffer-string))
     nil))
 
 ;;;##autoload
-(defun readwise--array-to-list (array)
+(defun org-readwise--array-to-list (array)
   "Coerce ARRAY to a list."
   (-map #'identity array))
 
-(defun readwise--fetch-highlights (api-key db-path &optional cursor since more)
+(defun org-readwise--fetch-highlights (api-key db-path &optional cursor since more)
   "Exhaustively fetch highlights from Readwise using API-KEY.
 Saves each to the appropriate `org-mode' files.
 API-KEY is the Readwise API key.
@@ -83,19 +84,19 @@ MORE indicates that there are more results to fetch."
   (let* ((params (append (when since `(("updatedAfter" . ,since)))
                          (when cursor `(("pageCursor" . ,cursor))))))
     (when more
-      (request (concat readwise-url "export/")
+      (request (concat org-readwise-url "export/")
         :type "GET"
         :params params
         :parser 'json-read
-        :headers `(("Authorization" . ,(concat "Token " readwise-api-token)))
+        :headers `(("Authorization" . ,(concat "Token " org-readwise-api-token)))
         :error (cl-function (lambda (_)
                               (message "Error fetching highlights from Readwise. Check your API key and try again.")))
         :success (cl-function (lambda (&key data &allow-other-keys)
                                 (let-alist data
-                                  (readwise--add-highlights (readwise--array-to-list .results))
+                                  (org-readwise--add-highlights (org-readwise--array-to-list .results))
                                   (if .nextPageCursor
-                                      (readwise--fetch-highlights api-key db-path .nextPageCursor since 't)
-                                    (readwise--save-last-sync)))))))))
+                                      (org-readwise--fetch-highlights api-key db-path .nextPageCursor since 't)
+                                    (org-readwise--save-last-sync)))))))))
 
 ;; ((user_book_id . 32654791) (title . A Practical Guide to
 ;; Distributed Scrum (Adobe Reader) (IBM Press)) (author . Elizabeth
@@ -211,7 +212,7 @@ MORE indicates that there are more results to fetch."
 ;; questions, verify assumptions, make connections, and follow their
 ;; own interests.")
 
-(defun readwise--handle-entry (entry)
+(defun org-readwise--handle-entry (entry)
   "Handle each ENTRY."
   ;; (message "%s" entry)
   (let* ((title (alist-get 'title entry))
@@ -240,10 +241,9 @@ MORE indicates that there are more results to fetch."
     ;; TODO: handle if there is no highlights
     ))
 
-(defun readwise--add-highlights (highlights)
+(defun org-readwise--add-highlights (highlights)
   "Add all new HIGHLIGHTS to `org-mode' notes."
-  (mapc 'readwise--handle-entry highlights))
+  (mapc 'org-readwise--handle-entry highlights))
 
-(provide 'readwise)
-;;; readwise.el ends here
-;; End:
+(provide 'org-readwise)
+;;; org-readwise.el ends here
