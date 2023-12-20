@@ -38,7 +38,7 @@
 
 (defconst org-readwise-url "https://readwise.io/api/v2/" "URL for Readwise API.")
 
-(defgroup readwise ()
+(defgroup org-readwise ()
   "Readwise integration for Emacs."
   ;; or :group 'org and :prefix org-readwise- ?
   :group 'readwise)
