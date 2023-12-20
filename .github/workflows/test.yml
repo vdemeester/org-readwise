@@ -68,9 +68,6 @@ jobs:
     # as failures, so linting and testing are run as separate steps.
 
     - name: Lint
-      # NOTE: Uncomment this line to treat lint failures as passing
-      #       so the job doesn't show failure.
-      continue-on-error: true
       run: nix --extra-experimental-features nix-command develop --command ./makem.sh -vv --sandbox=$SANDBOX_DIR lint
 
     - name: Test
