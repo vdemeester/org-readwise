@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Demeester <vincent@sbr.pm>
 ;; Version: 0.1
-;; Package-Requires: ((request "0.3.3") (dash "2.19.1"))
+;; Package-Requires: ((emacs "27.2") (request "0.3.3") (dash "2.19.1"))
 ;; Keywords: readwise, org
 ;; URL: https://github.com/vdemeester/readwise.el
 
