@@ -1,4 +1,4 @@
-;;; org-readwise.el --- a readwise to org package -*- lexical-binding: t -*-
+;;; org-readwise.el --- A readwise to org package -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2023 Vincent Demeester
 
