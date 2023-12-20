@@ -1,4 +1,4 @@
-# =org-readwise=
+* =org-readwise=
 
 /Note: this is my first even "emacs package" and currently a very big work-in-progress/.
 
