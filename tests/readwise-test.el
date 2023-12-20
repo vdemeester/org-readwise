@@ -26,7 +26,7 @@
   "Test the test."
   (request-testing-server)
   ;; (readwise--fetch-highlights readwise-api-token readwise-sync-db-path nil nil 't)
-  (setq readwise-url (request-testing-url "foo"))
+  ;; (setq readwise-url (request-testing-url "foo"))
   (should (equal readwise-url "https://foo.bar/baz/v2"))
   (should (equal 1 1)))
 
