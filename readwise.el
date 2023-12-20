@@ -242,7 +242,7 @@ MORE indicates that there are more results to fetch."
     ))
 
 (defun readwise--add-highlights (highlights)
-  "Add all new HIGHLIGHTS to org mode notes."
+  "Add all new HIGHLIGHTS to `org-mode' notes."
   (mapc 'readwise--handle-entry highlights))
 
 (provide 'readwise)
