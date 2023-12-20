@@ -69,7 +69,7 @@
     nil))
 
 ;;;##autoload
-(defun array-to-list (array)
+(defun readwise--array-to-list (array)
   "Coerce ARRAY to a list."
   (-map #'identity array))
 
@@ -93,7 +93,7 @@ MORE indicates that there are more results to fetch."
                               (message "Error fetching highlights from Readwise. Check your API key and try again.")))
         :success (cl-function (lambda (&key data &allow-other-keys)
                                 (let-alist data
-                                  (readwise--add-highlights (array-to-list .results))
+                                  (readwise--add-highlights (readwise--array-to-list .results))
                                   (if .nextPageCursor
                                       (readwise--fetch-highlights api-key db-path .nextPageCursor since 't)
                                     (readwise--save-last-sync)))))))))
