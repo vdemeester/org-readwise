@@ -4,7 +4,7 @@
 
 ;; Author: Vincent Demeester <vincent@sbr.pm>
 ;; Version: 0.1
-;; Package-Requires: ((request "0.3.3"))
+;; Package-Requires: ((request "0.3.3") (dash "2.19.1"))
 ;; Keywords: readwise, org
 ;; URL: https://github.com/vdemeester/readwise.el
 
@@ -33,8 +33,10 @@
 ;;- Mimic readwise plugin, aka add entries under a date when synced, …
 
 ;;; Code:
+(require 'request)
+(require 'dash)
 
-(defconst readwise-url "https://readwise.io/api/v2/" "URL for Readwise API")
+(defconst readwise-url "https://readwise.io/api/v2/" "URL for Readwise API.")
 
 (defgroup readwise ()
   "Readwise integration for Emacs."
@@ -47,7 +49,7 @@
   :group 'readwise)
 
 (defcustom readwise-api-token nil
-  "Readwise API key"
+  "Readwise API key."
   :type 'string
   :group 'readwise)
 
@@ -59,7 +61,7 @@
       (insert ts))))
 
 (defun readwise--get-last-sync ()
-  "Retrive the ISO 8601 timestamp of the last sync time."
+  "Retrieve the ISO 8601 timestamp of the last sync time."
   (if (file-exists-p readwise-sync-db-path)
       (with-temp-buffer
         (insert-file-contents readwise-sync-db-path)
@@ -73,7 +75,7 @@
 
 (defun readwise--fetch-highlights (api-key db-path &optional cursor since more)
   "Exhaustively fetch highlights from Readwise using API-KEY.
-Saves each to the appropriate org-mode files.
+Saves each to the appropriate `org-mode' files.
 API-KEY is the Readwise API key.
 DB-PATH is the path to the file where the last sync time is stored.
 CURSOR is the pagination cursor for fetching the next page of results.
@@ -211,18 +213,19 @@ MORE indicates that there are more results to fetch."
 ;; own interests.")
 
 (defun readwise--handle-entry (entry)
-  "Handle each entry :)"
+  "Handle each ENTRY."
   ;; (message "%s" entry)
   (let* ((title (alist-get 'title entry))
-	 (id (alist-get 'user_book_id entry))
+	 ;; (id (alist-get 'user_book_id entry))
 	 (created_at (alist-get 'created_at entry))
-	 (author (alist-get 'author entry))
-	 (source (alist-get 'source entry))
+	 ;; (author (alist-get 'author entry))
+	 ;; (source (alist-get 'source entry))
 	 (tags (alist-get 'book_tags entry))
 	 (category (alist-get 'category entry))
-	 (readwise_url (alist-get 'readwise_url entry))
+	 ;; (readwise_url (alist-get 'readwise_url entry))
 	 (document_note (alist-get 'document_note entry))
-	 (highlights (alist-get 'highlights entry)))
+	 ;; (highlights (alist-get 'highlights entry))
+	 )
     (message "title: %s" title)
     (message "created_at: %s" created_at)
     (message "category: %s" category)
@@ -239,14 +242,9 @@ MORE indicates that there are more results to fetch."
     ))
 
 (defun readwise--add-highlights (highlights)
-  "Add all new highlights to org mode notes."
+  "Add all new HIGHLIGHTS to org mode notes."
   (mapc 'readwise--handle-entry highlights))
-  ;; (cl-flet
-  ;;     ((import-highlights (entry)
-  ;; 	 (message
-  ;; 	 (let* ((readwise-book-id (alist-get 'bookId entry)))
-  ;; 	   (message readwise-book-id))))
-  ;;      (mapc #'import-highlights highlights)))
 
 (provide 'readwise)
 ;;; readwise.el ends here
+;; End:
