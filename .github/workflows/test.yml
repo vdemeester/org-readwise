@@ -44,7 +44,7 @@ jobs:
           - 29.1
           - snapshot
     steps:
-    - uses: cachix/install-nix-action@v24
+    - uses: cachix/install-nix-action@v26
 
     - uses: purcell/setup-emacs@master
       with:
